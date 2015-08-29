@@ -31,10 +31,12 @@
 
 App::uses('Controller', 'Controller');
 App::uses("ErrorCode", "Vendor");
+//App::uses("ConnectionManager", "Model");
 
 class AppController extends Controller {
     
     function beforeFilter() {
+        $errorCode = ErrorCode::NOT_API;
         //checking App Id and App Password
         if ($this->request->prefix == 'api') {
             $errorCode = $this->authorizeApplication();
@@ -42,6 +44,9 @@ class AppController extends Controller {
 				$this->renderWS($errorCode);
 				$this->renderAsJSON();
 			}
+        } else {
+            $this->renderWS($errorCode);
+            $this->renderAsJSON();
         }
     }
     
