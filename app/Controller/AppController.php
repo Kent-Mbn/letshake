@@ -37,12 +37,22 @@ class AppController extends Controller {
     
     function beforeFilter() {
         $errorCode = ErrorCode::NOT_API;
-        //checking App Id and App Password
         if ($this->request->prefix == 'api') {
+            
+            //checking App Id and App Password
             $errorCode = $this->authorizeApplication();
 			if($errorCode!==true){
 				$this->renderWS($errorCode);
 				$this->renderAsJSON();
+                return;
+			}
+            
+            //continue to checking auth user
+            $errorCode = $this->authorizeUser();
+            if($errorCode!==true){
+				$this->renderWS($errorCode);
+				$this->renderAsJSON();
+                return;
 			}
         } else {
             $this->renderWS($errorCode);
@@ -62,6 +72,23 @@ class AppController extends Controller {
             }
         }
         return ErrorCode::ACCESS_DENIED;
+    }
+    
+    protected function authorizeUser() {
+        //Checking fbId + fbToken + udid in header fields is exist in DB or not?
+        $headers = getallheaders();
+        $fbId = @$headers['facebookId'];
+        $fbToken = @$headers['facebookToken'];
+        $udidDevice = @$headers['udidDevice'];
+        
+        if (!empty($fbId) && !empty($fbToken) && !empty($udidDevice)) {
+            $this->loadModel('User');
+            $user = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('fbId' => $fbId, 'fbToken' => $fbToken, 'udidDevice' => $udidDevice)));
+            if (!empty($user)) {
+                return true;
+            }
+        }
+        return ErrorCode::AUTH_USER_INVALID;
     }
     
     function renderAsJSON(){

@@ -10,6 +10,7 @@ class ErrorCode {
 	/* Authorize validate */
     const AUTH_INVALID_TOKEN = "A001";
     const AUTH_TOKEN_EXPIRED = "A002";
+    const AUTH_USER_INVALID = "A003";
 	
 	/* User controller */	
     const WRONG_LOGIN_INFO = 'U000';
