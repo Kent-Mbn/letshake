@@ -26,19 +26,19 @@ class UsersController extends AppController {
     public function api_login() {
 		$error_code = null;
 		$data = array();
-		if($this->request->isPost()) {
-            $fbId = @$this->request->post_body['fbId'];
-		    $udid = @$this->request->post_body['udid'] ;
-            $fbToken = @$this->request->post_body['fbToken'];
-            $userId = @$this->request->post_body['userId'];
+		if($this->request->isPost()) {    
+            $fbId = @$this->request->data['fbId'];
+		    $udid = @$this->request->data['udid'] ;
+            $fbToken = @$this->request->data['fbToken'];
+            $userId = @$this->request->data['userId'];
             
-            $deviceModel = @$this->request->post_body['deviceModel'];
-            $osVersion = @$this->request->post_body['osVersion'];
+            $deviceModel = @$this->request->data['deviceModel'];
+            $osVersion = @$this->request->data['osVersion'];
             
             if(!empty($fbId) && !empty($udid) && !empty($fbToken)) {
                 
                 //Check fbId is exist in DB or not?
-                $user_fbId = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('fbId' => $fbId, 'fbToken' => $fbToken, 'udidDevice' => $udidDevice)));
+                $user_fbId = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('fbId' => $fbId)));
                 
                 if (empty($userId) && empty($user_fbId)) {
                     //Register a new account
@@ -48,33 +48,31 @@ class UsersController extends AppController {
                             'User' => array(
                                 'fbId' => $fbId,
                                 'fbToken' => $fbToken,
-                                'loginDate' => new DateTime("now"),
+                                'loginDate' => date("Y-m-d H:i:s"),
                                 'deviceModel' => $deviceModel,
                                 'osVersion' => $osVersion,
                                 'udidDevice' => $udid,
                             )
                         );
-                    $id_new_record = $this->User->save($data_for_insert);
-                    if ($id_new_record) {
-                        $data = array(
-                            'userId' => $id_new_record,
-                            'fbId' => $fbId,
-                            'fbToken' => $fbToken,
-                            'udidDevice' => $udid
-                        );
+                    $new_record = $this->User->save($data_for_insert);
+                    if ($new_record) {
+                        $data = $new_record;
                         $error_code = ErrorCode::REQUEST_SUCCESS; 
                     } else {
                         $error_code = ErrorCode::CAN_NOT_INSERT_FOR_REGISTER;
                     }
                 } else {
                     //Login
-                    
+                    //-> Update fbToken + udid again in row with userId
+                    if ($this->User->updateAll(array("fbToken" => $fbToken, "udidDevice" => $udid), array("id" => $userId))){
+                        $error_code = ErrorCode::REQUEST_SUCCESS;
+                    } else {
+                        $error_code = ErrorCode::CAN_NOT_UPDATE_FOR_LOGIN;
+                    }
                 }
             } else {
                 $error_code = ErrorCode::INPUT_LOGIN_INVALID;
             }
-            $error_code = ErrorCode::REQUEST_SUCCESS;
-            
         } else {
             $error_code = ErrorCode::NOT_IS_POST;
         }
