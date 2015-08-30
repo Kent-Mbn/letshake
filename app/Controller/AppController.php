@@ -45,15 +45,17 @@ class AppController extends Controller {
 				$this->renderWS($errorCode);
 				$this->renderAsJSON();
                 return;
-			}
+			}            
             
             //continue to checking auth user
-            $errorCode = $this->authorizeUser();
-            if($errorCode!==true){
-				$this->renderWS($errorCode);
-				$this->renderAsJSON();
-                return;
-			}
+            if(!in_array($this->action, array('api_login'))){
+                $errorCode = $this->authorizeUser();
+                if($errorCode!==true) {
+				    $this->renderWS($errorCode);
+				    $this->renderAsJSON();
+                    return;
+			     }
+            }
         } else {
             $this->renderWS($errorCode);
             $this->renderAsJSON();
