@@ -65,6 +65,7 @@ class UsersController extends AppController {
                     //Login
                     //-> Update fbToken + udid again in row with userId
                     if ($this->User->updateAll(array("fbToken" => $fbToken, "udidDevice" => $udid), array("id" => $userId))){
+                        $data = $this->User->find('first', array('conditions' => array('id' => $userId)));
                         $error_code = ErrorCode::REQUEST_SUCCESS;
                     } else {
                         $error_code = ErrorCode::CAN_NOT_UPDATE_FOR_LOGIN;
