@@ -11,7 +11,7 @@ class UsersController extends AppController {
     /**
 	 * Loaded components
 	 */	
-	public $components = array('RequestHandler');
+	public $components = array('RequestHandler', 'Common');
     
     public function beforeFilter(){
 		parent::beforeFilter();
@@ -26,29 +26,35 @@ class UsersController extends AppController {
     public function api_login() {
 		$error_code = null;
 		$data = array();
-		if($this->request->isPost()) {    
+		if($this->request->isPost()) {
+            
+            //Input:
             $fbId = @$this->request->data['fbId'];
 		    $udid = @$this->request->data['udid'] ;
-            $fbToken = @$this->request->data['fbToken'];
-            $userId = @$this->request->data['userId'];
-            
             $deviceModel = @$this->request->data['deviceModel'];
             $osVersion = @$this->request->data['osVersion'];
             
-            if(!empty($fbId) && !empty($udid) && !empty($fbToken)) {
+            if(!empty($fbId) && !empty($udid)) {
+                
+                //Create new token string
+                $new_token = $this->Common->generateAuthToken($fbId);
+                
+                //Create current date string
+                $current_date = date("Y-m-d H:i:s");
                 
                 //Check fbId is exist in DB or not?
                 $user_fbId = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('fbId' => $fbId)));
                 
-                if (empty($userId) && empty($user_fbId)) {
+                if (empty($user_fbId)) {
                     //Register a new account
                     //-> insert a new record
                     $this->User->create();
                     $data_for_insert = array (
                             'User' => array(
                                 'fbId' => $fbId,
-                                'fbToken' => $fbToken,
-                                'loginDate' => date("Y-m-d H:i:s"),
+                                'token' => $new_token,
+                                'loginDate' => $current_date,
+                                'logoutDate' => null,
                                 'deviceModel' => $deviceModel,
                                 'osVersion' => $osVersion,
                                 'udidDevice' => $udid,
@@ -63,10 +69,18 @@ class UsersController extends AppController {
                     }
                 } else {
                     //Login
-                    //-> Update fbToken + udid again in row with userId
-                    if ($this->User->updateAll(array("fbToken" => $fbToken, "udidDevice" => $udid), array("id" => $userId))){
-                        $data = $this->User->find('first', array('conditions' => array('id' => $userId)));
+                    //-> Update row with fbId
+                    if ($this->User->updateAll(array(
+                        "token" => "'$new_token'", 
+                        "udidDevice" => "'$udid'", 
+                        "loginDate" => "'$current_date'", 
+                        "logoutDate" => null, 
+                        "deviceModel" => "'$deviceModel'",
+                        "osVersion" => "'$osVersion'"), array("fbId" => $fbId))) {
+                        
+                        $data = $this->User->find('first', array('conditions' => array('fbId' => $fbId)));
                         $error_code = ErrorCode::REQUEST_SUCCESS;
+                        
                     } else {
                         $error_code = ErrorCode::CAN_NOT_UPDATE_FOR_LOGIN;
                     }

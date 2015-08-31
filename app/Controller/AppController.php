@@ -77,19 +77,19 @@ class AppController extends Controller {
     }
     
     protected function authorizeUser() {
-        //Checking fbId + fbToken + udid in header fields is exist in DB or not?
+        //Checking token + udid in header fields is exist in DB or not?
         $headers = getallheaders();
-        $fbId = @$headers['facebookId'];
-        $fbToken = @$headers['facebookToken'];
+        $token = @$headers['token'];
         $udidDevice = @$headers['udidDevice'];
         
-        if (!empty($fbId) && !empty($fbToken) && !empty($udidDevice)) {
+        if (!empty($token) && !empty($udidDevice)) {
             $this->loadModel('User');
-            $user = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('fbId' => $fbId, 'fbToken' => $fbToken, 'udidDevice' => $udidDevice)));
+            $user = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('token' => $token, 'udidDevice' => $udidDevice)));
             if (!empty($user)) {
                 return true;
             }
         }
+        
         return ErrorCode::AUTH_USER_INVALID;
     }
     
