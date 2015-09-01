@@ -114,4 +114,19 @@ class ScoresController extends AppController {
         }
         $this->renderWS($error_code, $data);
     }
+    
+    public function api_listFriend() {
+        
+        $error_code = null;
+		$data = array();
+        
+		if($this->request->isPost()) {
+            //Input:
+            $userId = @$this->request->data['userId'];
+            
+        } else {
+            $error_code = ErrorCode::NOT_IS_POST;
+        }
+        $this->renderWS($error_code, $data);
+    }
 }
