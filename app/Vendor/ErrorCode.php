@@ -18,9 +18,10 @@ class ErrorCode {
     const WRONG_LOGIN_INFO = 'U000';
     const USER_NOT_EXISTS = 'U001';
     const INPUT_LOGIN_INVALID = 'U002';
-    const CAN_NOT_INSERT_FOR_REGISTER = 'U003';
-    const CAN_NOT_UPDATE_FOR_LOGIN = 'U004';
-    const CAN_NOT_UPDATE_FOR_LOGOUT = 'U005';
+    const INPUT_LOGOUT_INVALID = 'U003';
+    const CAN_NOT_INSERT_FOR_REGISTER = 'U004';
+    const CAN_NOT_UPDATE_FOR_LOGIN = 'U005';
+    const CAN_NOT_UPDATE_FOR_LOGOUT = 'U006';
 
 }
 

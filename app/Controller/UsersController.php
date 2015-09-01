@@ -102,28 +102,26 @@ class UsersController extends AppController {
         $data = array();
         $error_code = null;
         
-        
-        if($this->request->isPost()) {
-            //Input:
-            $fbId = @$this->request->data['fbId'];
-		    $udid = @$this->request->data['udid'] ;
+        $headers = getallheaders();
+        $fbId = @$headers['fbId'];
+        $udid = @$headers['udidDevice'];
             
-            if(!empty($fbId) && !empty($udid)) {
-                
-                //Create current date string
-                $current_date = date("Y-m-d H:i:s");
-                
-                if ($this->User->updateAll(array(
-                        "token" => null,   
-                        "logoutDate" => "'$current_date'"), array("fbId" => $fbId, "udidDevice" => $udid))) {
-                        $error_code = ErrorCode::REQUEST_SUCCESS;
-                    } else {
-                        $error_code = ErrorCode::CAN_NOT_UPDATE_FOR_LOGOUT;
-                    }
-            }
+        if(!empty($fbId) && !empty($udid)) {
+
+            //Create current date string
+            $current_date = date("Y-m-d H:i:s");
+
+            if ($this->User->updateAll(array(
+                    "token" => null,   
+                    "logoutDate" => "'$current_date'"), array("fbId" => $fbId, "udidDevice" => $udid))) {
+                    $error_code = ErrorCode::REQUEST_SUCCESS;
+                } else {
+                    $error_code = ErrorCode::CAN_NOT_UPDATE_FOR_LOGOUT;
+                }
         } else {
-             $error_code = ErrorCode::NOT_IS_POST;  
+            $error_code = ErrorCode::INPUT_LOGOUT_INVALID;
         }
+        
         $this->renderWS($error_code, $data);
     }
 }
