@@ -68,4 +68,50 @@ class ScoresController extends AppController {
         }
         $this->renderWS($error_code, $data);
     }
+    
+    public function api_ranking() {
+        $error_code = null;
+		$data = array();
+        
+		if($this->request->isPost()) {
+            //Input:
+            $userId = @$this->request->data['userId'];
+            
+            //Get all array score
+            $arr_score = $this->Score->find('all', array('fields' => array('userId', 'score')));
+            
+            //Filter item in array to new array
+            $arr_filter = array();
+            
+            foreach ($arr_score as $item) {
+                if (isset($item["Score"])) {
+                    array_push($arr_filter, $item["Score"]);
+                }
+            }
+            
+            //Sort array filter SORT_DESC
+            $arr_sorted = array();
+            foreach ($arr_filter as $key => $row) {
+                $arr_sorted[$key] = $row['score'];
+            }
+            array_multisort($arr_sorted, SORT_DESC, $arr_filter);
+            
+            //Return ranking
+            $ranking_user = 0;
+            for ($i = 0; $i < count($arr_filter); $i++) {
+                $item = $arr_filter[$i];
+                if ($item['userId'] == $userId) {
+                    $ranking_user = $i + 1;
+                    break;
+                }
+            }
+            $data = array(
+                        'ranking' => $ranking_user
+                    );
+            $error_code = ErrorCode::REQUEST_SUCCESS;
+        } else {
+            $error_code = ErrorCode::NOT_IS_POST;
+        }
+        $this->renderWS($error_code, $data);
+    }
 }
