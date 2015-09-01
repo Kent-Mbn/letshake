@@ -22,6 +22,10 @@ class ErrorCode {
     const CAN_NOT_INSERT_FOR_REGISTER = 'U004';
     const CAN_NOT_UPDATE_FOR_LOGIN = 'U005';
     const CAN_NOT_UPDATE_FOR_LOGOUT = 'U006';
+    
+    /* Score controller */
+    const INPUT_SCORE_INVALID = 'S000';
+    const CAN_NOT_UPDATE_FOR_SCORE = 'S001';
 
 }
 
