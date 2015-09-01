@@ -12,6 +12,7 @@ class ErrorCode {
     const AUTH_INVALID_TOKEN = "A001";
     const AUTH_TOKEN_EXPIRED = "A002";
     const AUTH_USER_INVALID = "A003";
+    const AUTH_USER_INPUT_INVALID = "A004";
 	
 	/* User controller */	
     const WRONG_LOGIN_INFO = 'U000';
@@ -19,6 +20,7 @@ class ErrorCode {
     const INPUT_LOGIN_INVALID = 'U002';
     const CAN_NOT_INSERT_FOR_REGISTER = 'U003';
     const CAN_NOT_UPDATE_FOR_LOGIN = 'U004';
+    const CAN_NOT_UPDATE_FOR_LOGOUT = 'U005';
 
 }
 

@@ -34,7 +34,7 @@ App::uses("ErrorCode", "Vendor");
 //App::uses("ConnectionManager", "Model");
 
 class AppController extends Controller {
-    
+    public $components = array('RequestHandler');
     function beforeFilter() {
         $errorCode = ErrorCode::NOT_API;
         if ($this->request->prefix == 'api') {
@@ -44,7 +44,7 @@ class AppController extends Controller {
 			if($errorCode!==true){
 				$this->renderWS($errorCode);
 				$this->renderAsJSON();
-                return;
+                die();
 			}            
             
             //continue to checking auth user
@@ -53,12 +53,13 @@ class AppController extends Controller {
                 if($errorCode!==true) {
 				    $this->renderWS($errorCode);
 				    $this->renderAsJSON();
-                    return;
+                    die();
 			     }
             }
         } else {
             $this->renderWS($errorCode);
             $this->renderAsJSON();
+            die();
         }
     }
     
@@ -79,18 +80,22 @@ class AppController extends Controller {
     protected function authorizeUser() {
         //Checking token + udid in header fields is exist in DB or not?
         $headers = getallheaders();
-        $token = @$headers['token'];
+        $fbId = @$headers['fbId'];
         $udidDevice = @$headers['udidDevice'];
+        $token = @$headers['token'];
         
-        if (!empty($token) && !empty($udidDevice)) {
+        if (!empty($fbId) && !empty($udidDevice) && !empty($token)) {
             $this->loadModel('User');
-            $user = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('token' => $token, 'udidDevice' => $udidDevice)));
+            $user = $this->User->find('first', array('fields' => array('id'), 'conditions' => array('not' => array('token' => null), 'udidDevice' => $udidDevice, 'fbId' => $fbId, 'token' => $token)));
+            $log = $this->User->getDataSource()->getLog(false, false);
             if (!empty($user)) {
                 return true;
+            } else {
+                return ErrorCode::AUTH_USER_INVALID;  
             }
+        } else {
+            return ErrorCode::AUTH_USER_INPUT_INVALID;   
         }
-        
-        return ErrorCode::AUTH_USER_INVALID;
     }
     
     function renderAsJSON(){

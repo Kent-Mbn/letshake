@@ -21,7 +21,7 @@ class UsersController extends AppController {
 	}
     
     /*
-        Input: fbId, udid, fbToken
+        Input: fbId, udid, deviceModel, osVersion
     */
     public function api_login() {
 		$error_code = null;
@@ -30,7 +30,7 @@ class UsersController extends AppController {
             
             //Input:
             $fbId = @$this->request->data['fbId'];
-		    $udid = @$this->request->data['udid'] ;
+		    $udid = @$this->request->data['udid'];
             $deviceModel = @$this->request->data['deviceModel'];
             $osVersion = @$this->request->data['osVersion'];
             
@@ -94,4 +94,36 @@ class UsersController extends AppController {
         
         $this->renderWS($error_code, $data);
 	}
+    
+    /*
+        Input: $fbId, $udid
+    */
+    public function api_logout() {
+        $data = array();
+        $error_code = null;
+        
+        
+        if($this->request->isPost()) {
+            //Input:
+            $fbId = @$this->request->data['fbId'];
+		    $udid = @$this->request->data['udid'] ;
+            
+            if(!empty($fbId) && !empty($udid)) {
+                
+                //Create current date string
+                $current_date = date("Y-m-d H:i:s");
+                
+                if ($this->User->updateAll(array(
+                        "token" => null,   
+                        "logoutDate" => "'$current_date'"), array("fbId" => $fbId, "udidDevice" => $udid))) {
+                        $error_code = ErrorCode::REQUEST_SUCCESS;
+                    } else {
+                        $error_code = ErrorCode::CAN_NOT_UPDATE_FOR_LOGOUT;
+                    }
+            }
+        } else {
+             $error_code = ErrorCode::NOT_IS_POST;  
+        }
+        $this->renderWS($error_code, $data);
+    }
 }
