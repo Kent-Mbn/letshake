@@ -160,6 +160,8 @@ class ScoresController extends AppController {
                 $infor_user_filter = array(
                     'id' => $infor_user['User']['id'],
                     'fbId' => $infor_user['User']['fbId'],
+                    'name' => $infor_user['User']['name'],
+                    'locale' => $infor_user['User']['locale'],
                     'deviceModel' => $infor_user['User']['deviceModel'],
                     'osVersion' => $infor_user['User']['osVersion'],
                 );
