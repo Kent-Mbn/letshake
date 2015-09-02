@@ -132,7 +132,43 @@ class ScoresController extends AppController {
                     array_push($friendIdList, $item['Friend']['friendId']);
                 }
             }
-            var_dump($friendIdList);
+            
+            //Get all score from friend list and me -> sort again
+            $arr_score = $this->Score->find('all', array('fields' => array('userId', 'score'), 'conditions' => array('userId' => $friendIdList)));
+            
+            //Filter item in array to new array
+            $arr_filter = array();
+            
+            foreach ($arr_score as $item) {
+                if (isset($item["Score"])) {
+                    array_push($arr_filter, $item["Score"]);
+                }
+            }
+            
+            //Sort array filter SORT_DESC
+            $arr_sorted = array();
+            foreach ($arr_filter as $key => $row) {
+                $arr_sorted[$key] = $row['score'];
+            }
+            array_multisort($arr_sorted, SORT_DESC, $arr_filter);
+            
+            //Return ranking
+            $ranking_user = 0;
+            for ($i = 0; $i < count($arr_filter); $i++) {
+                $item = $arr_filter[$i];
+                if ($item['userId'] == $userId) {
+                    $ranking_user = $i + 1;
+                    break;
+                }
+            }
+            $data = array(
+                        'ranking' => $ranking_user
+                    );
+            $error_code = ErrorCode::REQUEST_SUCCESS;
+            
+            
+            
+            var_dump($data);
             exit;
             
             
