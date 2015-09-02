@@ -30,7 +30,8 @@
  */
 
 App::uses('Controller', 'Controller');
-App::uses("DefineConst" ,"ErrorCode", "Vendor");
+App::uses("ErrorCode", "Vendor");
+App::uses("DefineConst", "Vendor");
 //App::uses("ConnectionManager", "Model");
 
 class AppController extends Controller {
