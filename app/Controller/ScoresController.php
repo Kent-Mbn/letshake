@@ -168,19 +168,10 @@ class ScoresController extends AppController {
                     'score' => $item['score']
                 ));
             }
-            
             $data = array(
                         'list' => $arr_result
                     );
             $error_code = ErrorCode::REQUEST_SUCCESS;
-            
-            
-            
-            var_dump($data);
-            exit;
-            
-            
-            
         } else {
             $error_code = ErrorCode::NOT_IS_POST;
         }
