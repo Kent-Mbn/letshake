@@ -157,8 +157,14 @@ class ScoresController extends AppController {
             $arr_result = array();
             foreach ($arr_filter as $item) {
                 $infor_user = $this->User->find('first', array('conditions' => array('id' => $item['userId'])));
+                $infor_user_filter = array(
+                    'id' => $infor_user['User']['id'],
+                    'fbId' => $infor_user['User']['fbId'],
+                    'deviceModel' => $infor_user['User']['deviceModel'],
+                    'osVersion' => $infor_user['User']['osVersion'],
+                );
                 array_push($arr_result, array(
-                    'user' => $infor_user,
+                    'user' => $infor_user_filter,
                     'score' => $item['score']
                 ));
             }
