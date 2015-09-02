@@ -125,7 +125,7 @@ class ScoresController extends AppController {
             
             //Load friend model -> select all friend id
             $this->loadModel('Friend');
-            $friendIdList = $this->Friend->find('first', array('fields' => array('friendId'), 'conditions' => array('userId' => $userId)));
+            $friendIdList = $this->Friend->find('all', array('fields' => array('friendId'), 'conditions' => array('userId' => $userId)));
             
             var_dump($friendIdList);
             exit;
