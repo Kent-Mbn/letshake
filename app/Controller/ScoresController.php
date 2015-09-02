@@ -152,8 +152,19 @@ class ScoresController extends AppController {
             }
             array_multisort($arr_sorted, SORT_DESC, $arr_filter);
             
+            //Get infor of user
+            $this->loadModel('User');
+            $arr_result = array();
+            foreach ($arr_filter as $item) {
+                $infor_user = $this->User->find('first', array('conditions' => array('userId' => $item['userId'])));
+                array_push($arr_result, array(
+                    'user' => $infor_user,
+                    'score' => $item['score']
+                ));
+            }
+            
             $data = array(
-                        'list' => $arr_filter
+                        'list' => $arr_result
                     );
             $error_code = ErrorCode::REQUEST_SUCCESS;
             
