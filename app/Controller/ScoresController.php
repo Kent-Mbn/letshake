@@ -152,17 +152,8 @@ class ScoresController extends AppController {
             }
             array_multisort($arr_sorted, SORT_DESC, $arr_filter);
             
-            //Return ranking
-            $ranking_user = 0;
-            for ($i = 0; $i < count($arr_filter); $i++) {
-                $item = $arr_filter[$i];
-                if ($item['userId'] == $userId) {
-                    $ranking_user = $i + 1;
-                    break;
-                }
-            }
             $data = array(
-                        'ranking' => $ranking_user
+                        'list' => $arr_filter
                     );
             $error_code = ErrorCode::REQUEST_SUCCESS;
             
