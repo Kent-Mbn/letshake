@@ -116,13 +116,19 @@ class ScoresController extends AppController {
     }
     
     public function api_listFriend() {
-        
         $error_code = null;
-		$data = array();
-        
-		if($this->request->isPost()) {
+        $data = array();
+
+        if ($this->request->isPost()) {
             //Input:
             $userId = @$this->request->data['userId'];
+            
+            //Load friend model -> select all friend id
+            $this->loadModel('Friend');
+            $friendIdList = $this->Friend->find('first', array('fields' => array('friendId'), 'conditions' => array('userId' => $userId)));
+            
+            var_dump($friendIdList);
+            exit;
             
         } else {
             $error_code = ErrorCode::NOT_IS_POST;
