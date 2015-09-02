@@ -125,10 +125,17 @@ class ScoresController extends AppController {
             
             //Load friend model -> select all friend id
             $this->loadModel('Friend');
-            $friendIdList = $this->Friend->find('all', array('fields' => array('friendId'), 'conditions' => array('userId' => $userId)));
-            
+            $friendIdListDB = $this->Friend->find('all', array('fields' => array('friendId'), 'conditions' => array('userId' => $userId)));
+            $friendIdList = array($userId);
+            foreach ($friendIdListDB as $item) {
+                if (isset($item['Friend']['friendId'])) {
+                    array_push($friendIdList, $item['Friend']['friendId']);
+                }
+            }
             var_dump($friendIdList);
             exit;
+            
+            
             
         } else {
             $error_code = ErrorCode::NOT_IS_POST;
