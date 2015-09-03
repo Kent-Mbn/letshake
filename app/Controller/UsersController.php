@@ -21,7 +21,7 @@ class UsersController extends AppController {
 	}
     
     /*
-        Input: fbId, udid, deviceModel, osVersion
+        Input: fbId, udid, name, locale, deviceModel, osVersion
     */
     public function api_login() {
 		$error_code = null;
@@ -31,10 +31,12 @@ class UsersController extends AppController {
             //Input:
             $fbId = @$this->request->data['fbId'];
 		    $udid = @$this->request->data['udid'];
+            $name = @$this->request->data['name'];
+            $locale = @$this->request->data['locale'];
             $deviceModel = @$this->request->data['deviceModel'];
             $osVersion = @$this->request->data['osVersion'];
             
-            if(!empty($fbId) && !empty($udid)) {
+            if(!empty($fbId) && !empty($udid) && !empty($name)) {
                 
                 //Create new token string
                 $new_token = $this->Common->generateAuthToken($fbId);
@@ -55,6 +57,8 @@ class UsersController extends AppController {
                                 'token' => $new_token,
                                 'loginDate' => $current_date,
                                 'logoutDate' => null,
+                                'name' => $name,
+                                'locale' => $locale,
                                 'deviceModel' => $deviceModel,
                                 'osVersion' => $osVersion,
                                 'udidDevice' => $udid,
@@ -62,6 +66,11 @@ class UsersController extends AppController {
                         );
                     $new_record = $this->User->save($data_for_insert);
                     if ($new_record) {
+                        
+                        //Add url avatar and url image country
+                        $new_record['User']['url_avatar'] = $this->Common->getLinkAvatarFacebook($fbId);
+                        $new_record['User']['url_country'] = $this->Common->getLinkCountryFlag($locale);
+                        
                         $data = $new_record;
                         $error_code = ErrorCode::REQUEST_SUCCESS; 
                     } else {
@@ -74,11 +83,18 @@ class UsersController extends AppController {
                         "token" => "'$new_token'", 
                         "udidDevice" => "'$udid'", 
                         "loginDate" => "'$current_date'", 
-                        "logoutDate" => null, 
+                        "logoutDate" => null,
+                        "name" => "'$name'",
+                        "locale" => "'$locale'",
                         "deviceModel" => "'$deviceModel'",
                         "osVersion" => "'$osVersion'"), array("fbId" => $fbId))) {
                         
                         $data = $this->User->find('first', array('conditions' => array('fbId' => $fbId)));
+                        
+                        //Add url avatar and url image country
+                        $data['User']['url_avatar'] = $this->Common->getLinkAvatarFacebook($fbId);
+                        $data['User']['url_country'] = $this->Common->getLinkCountryFlag($locale);
+                        
                         $error_code = ErrorCode::REQUEST_SUCCESS;
                         
                     } else {

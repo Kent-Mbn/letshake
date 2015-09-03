@@ -169,6 +169,8 @@ class ScoresController extends AppController {
                         'locale' => $infor_user['User']['locale'],
                         'deviceModel' => $infor_user['User']['deviceModel'],
                         'osVersion' => $infor_user['User']['osVersion'],
+                        'url_avatar' => $this->Common->getLinkAvatarFacebook($infor_user['User']['fbId']),
+                        'url_country' => $this->Common->getLinkCountryFlag($infor_user['User']['locale']),
                     );
                     array_push($arr_result, array(
                         'user' => $infor_user_filter,
@@ -226,6 +228,8 @@ class ScoresController extends AppController {
                         'locale' => $infor_user['User']['locale'],
                         'deviceModel' => $infor_user['User']['deviceModel'],
                         'osVersion' => $infor_user['User']['osVersion'],
+                        'url_avatar' => $this->Common->getLinkAvatarFacebook($infor_user['User']['fbId']),
+                        'url_country' => $this->Common->getLinkCountryFlag($infor_user['User']['locale']),
                     );
                     array_push($arr_result, array(
                         'user' => $infor_user_filter,
