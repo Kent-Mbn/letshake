@@ -127,8 +127,11 @@ class ScoresController extends AppController {
         if ($this->request->isPost()) {
             //Input:
             $userId = @$this->request->data['userId'];
-            if (!empty($userId)) {
+            $strFriendIds = @$this->request->data['strFriendIds'];
+            $friendIdList = explode(",",$strFriendIds);
+            if (!empty($strFriendIds) || count($friendIdList) > 0 || !empty($userId)) {
                 //Load friend model -> select all friend id
+                /*
                 $this->loadModel('Friend');
                 $friendIdListDB = $this->Friend->find('all', array('fields' => array('friendId'), 'conditions' => array('userId' => $userId)));
                 $friendIdList = array($userId);
@@ -137,6 +140,9 @@ class ScoresController extends AppController {
                         array_push($friendIdList, $item['Friend']['friendId']);
                     }
                 }
+                 */
+                
+                array_push($friendIdList, $userId);
 
                 //Get all score from friend list and me -> sort again
                 $arr_score = $this->Score->find('all', array('fields' => array('userId', 'score'), 'conditions' => array('userId' => $friendIdList)));
