@@ -146,7 +146,7 @@ class ScoresController extends AppController {
                 
                 //Get all userId from fbId
                 $this->loadModel('User');
-                $friendIdList = $this->User->find('all', array('fields' => array('userId'), 'conditions' => array('fbId' => $friendFbIdList)));
+                $friendIdList = $this->User->find('all', array('fields' => array('id'), 'conditions' => array('fbId' => $friendFbIdList)));
                 var_dump($friendIdList);
                 exit;
                 
