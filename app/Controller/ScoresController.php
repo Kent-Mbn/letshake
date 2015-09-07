@@ -142,11 +142,17 @@ class ScoresController extends AppController {
                 }
                  */
                 
-                //array_push($friendFbIdList, $userId);
-                
+                $friendIdList = array();
+                array_push($friendIdList, $userId);
                 //Get all userId from fbId
                 $this->loadModel('User');
-                $friendIdList = $this->User->find('all', array('fields' => array('id'), 'conditions' => array('fbId' => $friendFbIdList)));
+                $friendIdListDB = $this->User->find('all', array('fields' => array('id'), 'conditions' => array('fbId' => $friendFbIdList)));
+                foreach ($friendIdListDB as $item) {
+                    if (isset($item['User']['id'])) {
+                        array_push($friendIdList, $item['User']['id']);
+                    }
+                }
+                
                 var_dump($friendIdList);
                 exit;
                 
