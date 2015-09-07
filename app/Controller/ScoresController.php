@@ -153,10 +153,6 @@ class ScoresController extends AppController {
                     }
                 }
                 
-                var_dump($friendIdList);
-                exit;
-                
-                
                 //Get all score from friend list and me -> sort again
                 $arr_score = $this->Score->find('all', array('fields' => array('userId', 'score'), 'conditions' => array('userId' => $friendIdList)));
 
