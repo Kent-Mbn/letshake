@@ -204,6 +204,29 @@ class ScoresController extends AppController {
         }
         $this->renderWS($error_code, $data);
     }
+    
+    public function api_user() {
+        $error_code = null;
+        $data = array();
+        if ($this->request->isPost()) {
+            //Input:
+            $userId = @$this->request->data['userId'];
+            if (!empty($userId)) {
+                $score_user = $this->Score->find('first', array('fields' => array('score'), 'conditions' => array('userId' => $userId)));
+                if (count($score_user) > 0 && isset($score_user["Score"]["score"])) {
+                    $data = $score_user; 
+                } else  {
+                    $data["Score"]["score"] = "0";
+                }
+                $error_code = ErrorCode::REQUEST_SUCCESS;
+            } else {
+                $error_code = ErrorCode::INPUT_SCORE_INVALID;
+            }
+        } else {
+            $error_code = ErrorCode::NOT_IS_POST;
+        }
+        $this->renderWS($error_code, $data);
+    }
 
     public function api_topWorld() {
         $error_code = null;
