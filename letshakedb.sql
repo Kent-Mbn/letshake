@@ -1,96 +1,78 @@
--- phpMyAdmin SQL Dump
--- version 4.4.12
--- http://www.phpmyadmin.net
+CREATE DATABASE  IF NOT EXISTS `letshakedb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `letshakedb`;
+-- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
--- Host: localhost
--- Generation Time: Sep 02, 2015 at 04:40 PM
--- Server version: 5.6.25
--- PHP Version: 5.5.27
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
+-- Host: 127.0.0.1    Database: letshakedb
+-- ------------------------------------------------------
+-- Server version	5.5.16-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `letshakedb`
---
-
--- --------------------------------------------------------
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Table structure for table `apikeys`
 --
 
-CREATE TABLE IF NOT EXISTS `apikeys` (
+DROP TABLE IF EXISTS `apikeys`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `apikeys` (
   `appId` varchar(50) NOT NULL,
   `appSecret` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `apikeys`
 --
 
-INSERT INTO `apikeys` (`appId`, `appSecret`) VALUES
-('letshake', 'letshake123');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `friends`
---
-
-CREATE TABLE IF NOT EXISTS `friends` (
-  `id` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `friendId` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `friends`
---
-
-INSERT INTO `friends` (`id`, `userId`, `friendId`) VALUES
-(1, 1, 2),
-(2, 1, 3);
-
--- --------------------------------------------------------
+LOCK TABLES `apikeys` WRITE;
+/*!40000 ALTER TABLE `apikeys` DISABLE KEYS */;
+INSERT INTO `apikeys` VALUES ('letshake','letshake123');
+/*!40000 ALTER TABLE `apikeys` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `scores`
 --
 
-CREATE TABLE IF NOT EXISTS `scores` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `scores`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `scores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
-  `score` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+  `score` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `scores`
 --
 
-INSERT INTO `scores` (`id`, `userId`, `score`) VALUES
-(1, 1, 900),
-(2, 2, 500),
-(3, 3, 400),
-(4, 4, 300),
-(5, 5, 200),
-(6, 6, 100),
-(7, 7, 600);
-
--- --------------------------------------------------------
+LOCK TABLES `scores` WRITE;
+/*!40000 ALTER TABLE `scores` DISABLE KEYS */;
+/*!40000 ALTER TABLE `scores` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fbId` varchar(100) NOT NULL,
   `token` varchar(200) DEFAULT NULL,
   `loginDate` date DEFAULT NULL,
@@ -99,63 +81,27 @@ CREATE TABLE IF NOT EXISTS `users` (
   `locale` varchar(100) DEFAULT NULL,
   `deviceModel` varchar(100) DEFAULT NULL,
   `osVersion` varchar(100) DEFAULT NULL,
-  `udidDevice` varchar(100) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+  `udidDevice` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fbId`, `token`, `loginDate`, `logoutDate`, `name`, `locale`, `deviceModel`, `osVersion`, `udidDevice`) VALUES
-(1, '123', 'MTIzLTE0NDExODMwMjI0NzAzZmU4ODA=', '2015-09-02', NULL, 'user1', 'en_US', 'iPhone 6 plus', 'iOS 8.1', '666'),
-(2, '124', 'MTI0LTE0NDEwMzgzNTdmZGYyZDhkYWU=', '2015-08-31', NULL, 'user2', 'en_US', 'iPhone 5', 'iOS 8.1', '555'),
-(3, '125', 'MTI1LTE0NDExMDk1MTM1YWY2MjM1Yjg=', '2015-09-01', NULL, 'user3', 'en_US', 'iPhone 6 plus', 'iOS 8.1', '777'),
-(4, '126', 'MTI2LTE0NDExMDk1Mzk5OTNkYjcxYjA=', '2015-09-01', NULL, 'user4', 'en_US', 'iPhone 6 plus', 'iOS 8.1', '888'),
-(5, '127', 'MTI3LTE0NDExMDk1NzBhY2IyNGZhMjA=', '2015-09-01', NULL, 'user5', 'en_US', 'iPhone 6 plus', 'iOS 8.1', '999'),
-(6, '128', 'MTI4LTE0NDExMDk1ODcxMWI1NmRjNGE=', '2015-09-01', NULL, 'user6', 'en_US', 'iPhone 6 plus', 'iOS 8.1', '10000'),
-(7, '129', 'MTI5LTE0NDExMDk2MDY1NTFiOGRlYjg=', '2015-09-01', NULL, 'user7', 'en_US', 'iPhone 6 plus', 'iOS 8.1', '10001');
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `friends`
---
-ALTER TABLE `friends`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `scores`
---
-ALTER TABLE `scores`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `friends`
---
-ALTER TABLE `friends`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `scores`
---
-ALTER TABLE `scores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-09-16 15:12:06
